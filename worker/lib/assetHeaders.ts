@@ -17,9 +17,9 @@ const CONTENT_SECURITY_POLICY = [
   // 处理器、javascript: 链接、任意内联 <script> 全部仍然被阻断。
   //
   // NOTE: 明月浩空播放器（myhkw.cn）所需的 CDN 白名单。
-  // 播放器强依赖 jQuery，通过 custom_js 动态注入（先 jQuery → 再播放器脚本）。
-  // 如需移除明月浩空，删除 https://myhkw.cn / bootcdn.cn / cdnjs.cloudflare.com 即可。
-  "script-src 'self' blob: https://myhkw.cn https://bootcdn.cn https://cdnjs.cloudflare.com",
+  // 播放器强依赖 jQuery，从 cdnjs.cloudflare.com 加载（和明月浩空共用一个外部域名）。
+  // 如需移除明月浩空，删除 https://myhkw.cn 即可。
+  "script-src 'self' blob: https://myhkw.cn https://cdnjs.cloudflare.com",
   "style-src 'self' 'unsafe-inline' blob: https://myhkw.cn",
   "img-src 'self' https: data: blob:",
   "font-src 'self' data:",
