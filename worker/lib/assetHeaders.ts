@@ -23,7 +23,10 @@ const CONTENT_SECURITY_POLICY = [
   "script-src 'self' blob: 'unsafe-eval' https://myhkw.cn https://cdnjs.cloudflare.com",
   "style-src 'self' 'unsafe-inline' blob: https://myhkw.cn",
   "img-src 'self' https: data: blob:",
-  "font-src 'self' data:",
+  "font-src 'self' data: https://myhkw.cn",
+  // NOTE: 明月浩空播放器字体（iconfont）来自其 CDN；音乐平台字体同理
+  // NOTE: media-src 显式声明，否则回落 default-src 拦掉所有远程 MP3
+  "media-src 'self' https: blob:",
   // NOTE: 明月浩空服务端（歌单/歌词/封面等数据接口）
   "connect-src 'self' https://myhkw.cn",
   // 书签的「当前页弹层」打开方式要嵌入外站。不声明 frame-src 会回落到
