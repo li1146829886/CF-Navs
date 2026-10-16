@@ -16,14 +16,15 @@ const CONTENT_SECURITY_POLICY = [
   // 保持没有 'unsafe-inline' 的直接效果：footer_html 里的 onerror= 之类内联事件
   // 处理器、javascript: 链接、任意内联 <script> 全部仍然被阻断。
   //
-  // NOTE: https://cdn.jsdelivr.net 是明月浩空播放器（APlayer + MetingJS）所需，
-  // 通过 footer_html 引入。如果不需要可移除。
-  "script-src 'self' blob: https://cdn.jsdelivr.net",
-  "style-src 'self' 'unsafe-inline' blob: https://cdn.jsdelivr.net",
+  // NOTE: 明月浩空播放器（myhkw.cn）所需的 CDN 白名单。
+  // 播放器强依赖 jQuery，通过 custom_js 动态注入（先 jQuery → 再播放器脚本）。
+  // 如需移除明月浩空，删除 https://myhkw.cn / bootcdn.cn / cdnjs.cloudflare.com 即可。
+  "script-src 'self' blob: https://myhkw.cn https://bootcdn.cn https://cdnjs.cloudflare.com",
+  "style-src 'self' 'unsafe-inline' blob: https://myhkw.cn",
   "img-src 'self' https: data: blob:",
   "font-src 'self' data:",
-  // NOTE: MetingJS 代理 API 域名 + 网易云原始接口，明月浩空播放器所需
-  "connect-src 'self' https://api.injahow.cn https://api.moeyao.cn https://music.163.com",
+  // NOTE: 明月浩空服务端（歌单/歌词/封面等数据接口）
+  "connect-src 'self' https://myhkw.cn",
   // 书签的「当前页弹层」打开方式要嵌入外站。不声明 frame-src 会回落到
   // default-src 'self'，跨源 iframe 全被拦掉，那个打开方式点开只有空白弹层。
   // 只放开 iframe，不影响脚本；能不能嵌仍由目标站点自己的 X-Frame-Options 决定。
