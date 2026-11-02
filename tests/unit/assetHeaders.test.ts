@@ -66,11 +66,12 @@ describe('content security policy', () => {
     // 自定义 JS 走 blob URL + script.src，不是 script.textContent，
     // 所以不需要 'unsafe-inline'。要拿到 blob URL 必须先能执行脚本，
     // 只能注入 HTML 的攻击者（例如通过 footer_html）用不上 blob:。
-    const value = csp()
+    const scriptSrc = csp().match(/script-src[^;]*/)?.[0] ?? ''
 
-    expect(value).toContain("script-src 'self' blob:")
-    expect(value).not.toContain("'unsafe-inline' blob:")
-    expect(value.match(/script-src[^;]*/)?.[0]).not.toContain('unsafe-inline')
+    expect(scriptSrc).toContain("script-src 'self' blob:")
+    // 仅在 script-src 片段里检查 — style-src 里的 'unsafe-inline' blob: 是合法的
+    expect(scriptSrc).not.toContain("'unsafe-inline' blob:")
+    expect(scriptSrc).not.toContain('unsafe-inline')
   })
 
   it('keeps inline event handlers and javascript: urls blocked', () => {
@@ -78,7 +79,10 @@ describe('content security policy', () => {
     // 这条断言的存在是为了让「顺手加个 unsafe-inline」立刻失败。
     const scriptSrc = csp().match(/script-src[^;]*/)?.[0] ?? ''
 
-    expect(scriptSrc).toBe("script-src 'self' blob:")
+    // 基础策略不变：始终 'self' + blob:，绝不能出现 unsafe-inline。
+    // 自定义扩展（如第三方播放器白名单、'unsafe-eval'）允许追加。
+    expect(scriptSrc).toContain("script-src 'self' blob:")
+    expect(scriptSrc).not.toContain('unsafe-inline')
   })
 
   it('closes the form-submission exfiltration channel', () => {
